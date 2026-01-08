@@ -11,7 +11,7 @@ const router = express.Router();
 router.post("/test", async (req, res) => {
   try {
     const thread = new Thread({
-      threadId: "xyz",
+      threadId: "mno",
       title: "Testing thread",
     });
 
@@ -37,10 +37,10 @@ router.post("/chat", async (req, res) => {
     }   
 
     if (thread == null) {
-        
+      const Title = await GenerateTitle(message.content);
         const newThread = new Thread({
         threadId: uuidv4(),
-        title: await GenerateTitle(message.content),
+        title: Title,
       });
       thread = await newThread.save();
     }

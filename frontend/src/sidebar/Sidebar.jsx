@@ -1,9 +1,25 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { CrossContext } from "../context";
 import "./Sidebar.css";
+import axios from "axios";
 
 const Sidebar = () => {
+  const [threads, setThreads] = useState([]);
   const value = useContext(CrossContext);
+
+  const GetThreads = import.meta.env.VITE_THREAD_API_URL;
+
+  useEffect(() => {
+    axios
+      .get(`${GetThreads}/thread`)
+      .then((res) => {
+        const threadArr = res.data;
+        setThreads(threadArr);
+      })
+      .catch((e) => {
+        console.log("Error Occured during featching thread: " + e.message);
+      });
+  }, []);
 
   function toggleSidebar() {
     value.setCross(!value.cross);
@@ -15,8 +31,8 @@ const Sidebar = () => {
         <div className="sidebar-content">
           <div className="sidebar-header">
             <div className="header-controls">
-              <button 
-                className="toggle-btn" 
+              <button
+                className="toggle-btn"
                 onClick={toggleSidebar}
                 aria-label="Toggle sidebar"
               >
@@ -43,7 +59,9 @@ const Sidebar = () => {
             <div className="recents-section">
               <h3 className="section-title">Recents</h3>
               <div className="recents-list">
-                {/* Recent chats will go here */}
+                  {threads.map((thread) => {
+                  return ( <div className="thread" key={thread.threadId}>{thread.title}</div>);
+                })}
               </div>
             </div>
 
@@ -56,8 +74,8 @@ const Sidebar = () => {
 
       {!value.cross && (
         <div className="sidebar-collapsed">
-          <button 
-            className="collapsed-btn toggle-btn" 
+          <button
+            className="collapsed-btn toggle-btn"
             onClick={toggleSidebar}
             aria-label="Open sidebar"
           >

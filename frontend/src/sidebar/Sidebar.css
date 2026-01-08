@@ -318,3 +318,29 @@
     border-bottom-color: #333;
   }
 }
+
+.thread {
+  height: 40px;
+  margin-left: 5px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px 0 8px;
+}
+
+.section-title {
+  height: 40px;
+  margin-left: 5px;
+  margin-bottom: 0px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px 0 8px;
+}
+
+.thread:hover {
+  background-color: #2A2B32;
+  border: 1px solid none;
+  border-radius: 0.8rem;
+  cursor: pointer;
+}

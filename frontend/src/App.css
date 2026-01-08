@@ -1,0 +1,212 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #ECECF1;
+  background-color: #343541;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+.page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-width: 0;
+}
+
+.navbar {
+  height: 64px;
+  flex-shrink: 0;
+  background-color: #1F1F1F;
+  border-bottom: 1px solid #2A2B32;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+.chat {
+  flex: 1;
+  overflow-y: auto;
+  background: #343541;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 0;
+}
+
+.sidebar {
+  width: 308px;
+  height: 100vh;
+  background-color: #202123;
+  color: #ECECF1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-right: 1px solid #2A2B32;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 20;
+}
+
+/* Sidebar states */
+.sidebar.open {
+  width: 308px;
+}
+
+.sidebar.closed {
+  width: 72px;
+}
+
+/* Mobile overlay */
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .app-container {
+    position: relative;
+  }
+  
+  .mobile-overlay {
+    display: block;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .sidebar.open {
+    width: 280px;
+    transform: translateX(0);
+  }
+  
+  .sidebar.closed {
+    width: 280px;
+    transform: translateX(-100%);
+  }
+  
+  .page {
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  .navbar {
+    padding-left: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar.open {
+    width: 100vw;
+  }
+  
+  .navbar {
+    height: 56px;
+    padding-left: 12px;
+  }
+}/* 
+Smooth scrolling for better UX */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better touch targets for mobile */
+@media (max-width: 768px) {
+  button, .clickable {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #10A37F;
+  outline-offset: 2px;
+}
+
+/* Prevent text selection on UI elements */
+.sidebar, .navbar {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Loading animation for future use */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Improved scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4A5568;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5A6578;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .sidebar {
+    border-right: 2px solid #ECECF1;
+  }
+  
+  .navbar {
+    border-bottom: 2px solid #ECECF1;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

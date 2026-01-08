@@ -1,0 +1,107 @@
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 0 20px;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-menu-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: #ECECF1;
+  border-radius: 8px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-btn:hover {
+  background-color: #2A2B32;
+}
+
+.model-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ECECF1;
+  background: linear-gradient(135deg, #10A37F 0%, #0d8f6b 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(16, 163, 127, 0.2);
+}
+
+.profile-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: #2A2B32;
+  color: #ECECF1;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.profile-btn:hover {
+  background-color: #3A3B42;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 16px;
+  }
+  
+  .mobile-menu-btn {
+    display: flex;
+  }
+  
+  .model-badge {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 0 12px;
+  }
+  
+  .navbar-left {
+    gap: 12px;
+  }
+  
+  .model-badge {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+  
+  .profile-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+}

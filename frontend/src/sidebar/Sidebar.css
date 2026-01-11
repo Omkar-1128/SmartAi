@@ -69,6 +69,12 @@
   background-color: #2A2B32;
 }
 
+.clickedThread {
+  background-color: #2A2B32;
+  border-radius: 12px;
+  
+}
+
 .action-btn i {
   margin-right: 12px;
   font-size: 16px;
@@ -82,7 +88,7 @@
   display: flex;
   flex-direction: column;
   padding: 16px 12px;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .recents-section {
@@ -188,6 +194,10 @@
     width: 44px;
     height: 44px;
   }
+
+  .settings-btn {
+    margin-bottom: 50px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -215,7 +225,8 @@
   .action-btn,
   .toggle-btn,
   .search-btn,
-  .settings-btn {
+  .settings-btn ,
+  .thread{
     min-height: 44px;
     touch-action: manipulation;
   }
@@ -243,7 +254,8 @@
 .toggle-btn:active,
 .search-btn:active,
 .settings-btn:active,
-.collapsed-btn:active {
+.collapsed-btn:active,
+.thread:active {
   transform: scale(0.98);
   background-color: #3A3B42;
 }
@@ -253,7 +265,8 @@
 .toggle-btn,
 .search-btn,
 .settings-btn,
-.collapsed-btn {
+.collapsed-btn,
+.thread {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

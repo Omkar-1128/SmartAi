@@ -1,13 +1,31 @@
 import Sidebar from "./sidebar/Sidebar";
 import Navbar from "./navbar/Navbar";
 import Chat from "./chat/Chat";
-import { CrossContext } from "./context";
+import { CrossContext, ThreadContext, ActiveMessages , ActiveThreadId , UserMessageContext} from "./context";
 import "./App.css";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 function App() {
   const [cross, setCross] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [threads, setThreads] = useState([]);
+  const [activeMessages, setActiveMessages] = useState([]);
+  const [threadId , setThreadId] = useState("null");
+  const [message, setMessage] = useState("");
+
+  const GetThreads = import.meta.env.VITE_THREAD_API_URL;
+  useEffect(() => {
+    axios
+      .get(`${GetThreads}/thread`)
+      .then((res) => {
+        const threadArr = res.data;
+        setThreads(threadArr);
+      })
+      .catch((e) => {
+        console.log("Error Occured during featching thread: " + e.message);
+      });
+  }, []);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -18,8 +36,8 @@ function App() {
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Close sidebar when clicking outside on mobile
@@ -31,26 +49,36 @@ function App() {
 
   return (
     <div className="app-container">
-      <CrossContext.Provider value={{ cross, setCross }}>
-        {/* Mobile overlay */}
-        {isMobile && cross && (
-          <div className="mobile-overlay" onClick={handleOverlayClick} />
-        )}
-        
-        <div className={`sidebar ${cross ? "open" : "closed"}`}>
-          <Sidebar />
-        </div>
+      <UserMessageContext.Provider value={{ message, setMessage }}>
+      <ActiveMessages.Provider
+        value={{ activeMessages: activeMessages, setActiveMessages: setActiveMessages }}
+      >
+        <ThreadContext.Provider value={{threads , setThreads}}>
+          <ActiveThreadId.Provider value={{threadId: threadId , setThreadId: setThreadId}}>
+          <CrossContext.Provider value={{ cross, setCross }}>
+            {/* Mobile overlay */}
+            {isMobile && cross && (
+              <div className="mobile-overlay" onClick={handleOverlayClick} />
+            )}
 
-        <div className="page">
-          <div className="navbar">
-            <Navbar />
-          </div>
+            <div className={`sidebar ${cross ? "open" : "closed"}`}>
+              <Sidebar />
+            </div>
 
-          <div className="chat">
-            <Chat />
-          </div>
-        </div>
-      </CrossContext.Provider>
+            <div className="page">
+              <div className="navbar">
+                <Navbar />
+              </div>
+
+              <div className="chat">
+                <Chat />
+              </div>
+            </div>
+          </CrossContext.Provider>
+          </ActiveThreadId.Provider>
+        </ThreadContext.Provider>
+      </ActiveMessages.Provider>
+      </UserMessageContext.Provider>
     </div>
   );
 }

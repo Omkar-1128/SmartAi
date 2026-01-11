@@ -26,21 +26,26 @@ router.post("/test", async (req, res) => {
 // Chat Route
 router.post("/chat", async (req, res) => {
   try {
-    const { threadId, message } = req.body;
-    if(!message) {
-        res.status(400).json({error: "Missing message"})
+    let { threadId, message } = req.body;
+    if (!message) {
+      res.status(400).json({ error: "Missing message" });
     }
 
     let thread = null;
+    let Title = "New Chat";
     if (threadId) {
       thread = await Thread.findOne({ threadId });
-    }   
+      if(thread) {
+        Title = thread.title;
+      }
+    } 
 
     if (thread == null) {
-      const Title = await GenerateTitle(message.content);
-        const newThread = new Thread({
-        threadId: uuidv4(),
-        title: Title,
+      threadId = uuidv4();
+      Title = await GenerateTitle(message.content);
+      const newThread = new Thread({
+      threadId: threadId,
+      title: Title,
       });
       thread = await newThread.save();
     }
@@ -49,10 +54,21 @@ router.post("/chat", async (req, res) => {
     await thread.save();
 
     const assistantResponse = await GetSmartAiResponse(message.content);
-    thread.messages.push({content: assistantResponse , role: "assistant"});
+    thread.messages.push({ content: assistantResponse, role: "assistant" });
     thread.updatedAt = new Date();
+    const assistantMessage = {
+      content: assistantResponse,
+      role: "assistant",
+    };
     await thread.save();
-    res.status(200).json({ success: "Message saved in the database"});
+    res
+      .status(200)
+      .json({
+        success: "Message saved in the database",
+        assistance: assistantMessage,
+        threadId: threadId,
+        title: Title
+      });
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: "Something went wrong" });
@@ -76,7 +92,7 @@ router.get("/thread", async (req, res) => {
 router.get("/thread/:id", async (req, res) => {
   try {
     const threadID = req.params.id;
-    const thread = await Thread.findOne({threadId : threadID });
+    const thread = await Thread.findOne({ threadId: threadID });
 
     if (!thread) {
       res.status(404).json({ error: "Thread Not Found" });

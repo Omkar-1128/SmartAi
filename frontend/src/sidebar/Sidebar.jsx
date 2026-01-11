@@ -1,28 +1,25 @@
-import { useContext, useState, useEffect } from "react";
-import { CrossContext } from "../context";
+import { useContext } from "react";
+import { CrossContext , ThreadContext, ActiveMessages , ActiveThreadId } from "../context";
 import "./Sidebar.css";
-import axios from "axios";
 
 const Sidebar = () => {
-  const [threads, setThreads] = useState([]);
   const value = useContext(CrossContext);
-
-  const GetThreads = import.meta.env.VITE_THREAD_API_URL;
-
-  useEffect(() => {
-    axios
-      .get(`${GetThreads}/thread`)
-      .then((res) => {
-        const threadArr = res.data;
-        setThreads(threadArr);
-      })
-      .catch((e) => {
-        console.log("Error Occured during featching thread: " + e.message);
-      });
-  }, []);
+  const Allthreads = useContext(ThreadContext);
+  const Active = useContext(ActiveMessages);
+  const ActiveThread = useContext(ActiveThreadId);
 
   function toggleSidebar() {
     value.setCross(!value.cross);
+  }
+
+  function HandleThreadsClicks(thread) {
+    Active.setActiveMessages(thread.messages);
+    ActiveThread.setThreadId(thread.threadId);
+  }
+
+  function SetNewChat() {
+    Active.setActiveMessages([]);
+    ActiveThread.setThreadId("null");
   }
 
   return (
@@ -45,7 +42,7 @@ const Sidebar = () => {
           </div>
 
           <div className="sidebar-actions">
-            <button className="action-btn new-chat-btn">
+            <button className="action-btn new-chat-btn" onClick={SetNewChat}>
               <i className="fa-regular fa-comment"></i>
               <span>New Chat</span>
             </button>
@@ -57,10 +54,12 @@ const Sidebar = () => {
 
           <div className="sidebar-footer">
             <div className="recents-section">
-              <h3 className="section-title">Recents</h3>
+              {Allthreads.threads.length === 0 && <h3 className="section-title">No Recents</h3>} 
+              {Allthreads.threads.length != 0 && <h3 className="section-title">Recents</h3>} 
               <div className="recents-list">
-                  {threads.map((thread) => {
-                  return ( <div className="thread" key={thread.threadId}>{thread.title}</div>);
+                  {Allthreads.threads.map((thread) => {
+                    const isActive = ActiveThread.threadId === thread.threadId;
+                  return ( <div onClick={() => HandleThreadsClicks(thread)} className={`thread ${isActive? "clickedThread" : ""}`} key={thread.threadId}>{thread.title}</div>);
                 })}
               </div>
             </div>

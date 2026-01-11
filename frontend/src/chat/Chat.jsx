@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Chat.css";
 import { useContext } from "react";
 import {
@@ -8,6 +8,12 @@ import {
   ThreadContext,
 } from "../context.jsx";
 import axios from "axios";
+import { HashLoader } from "react-spinners";
+import ReactMarkdown from "react-markdown"
+import rehypeHighlight from "rehype-highlight"
+import "highlight.js/styles/github-dark.css";
+// import "highlight.js/styles/atom-one-dark.css";
+// import "highlight.js/styles/monokai.css";
 
 const Chat = () => {
   const threadMessages = useContext(ActiveMessages);
@@ -16,8 +22,11 @@ const Chat = () => {
   const threads = useContext(ThreadContext);
   const API_URL = import.meta.env.VITE_THREAD_API_URL;
 
+  const [loader , setLoader] = useState(false);
+
   async function sendRequest(text) {
     try {
+      setLoader(true);
       await axios
         .post(`${API_URL}/chat`, {
           threadId: currThreadId.threadId,
@@ -46,6 +55,7 @@ const Chat = () => {
 
             return [updatedThread, ...filtered];
           });
+          setLoader(false);
         });
     } catch (e) {
       console.log("Error occur during getting responce of assistant: " + e);
@@ -73,6 +83,9 @@ const Chat = () => {
     <>
       {threadMessages.activeMessages.length === 0 && (
         <div className="chat-container">
+          {loader && <div className="Loader">
+            <HashLoader color="#10A37F" size={50}/>
+          </div>}
           <div className="welcome-section">
             <div className="welcome-icon">
               <i className="fa-solid fa-robot"></i>
@@ -87,6 +100,9 @@ const Chat = () => {
 
       {threadMessages.activeMessages.length != 0 && (
         <div className="parent-container">
+          {loader && <div className="Loader">
+            <HashLoader color="#10A37F" size={50}/>
+          </div>}
           <div className="chat-container">
             <div className="chat-content">
               <div className="chat-inner">
@@ -97,7 +113,8 @@ const Chat = () => {
                       msg.role === "user" ? "user" : "assistant"
                     }`}
                   >
-                    {msg.content}
+                    {msg.role == "user" && msg.content}
+                    {msg.role == "assistant" && <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{msg.content}</ReactMarkdown>}
                   </div>
                 ))}
               </div>

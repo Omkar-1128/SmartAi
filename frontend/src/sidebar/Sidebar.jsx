@@ -33,13 +33,16 @@ const Sidebar = () => {
     try {
       await axios.delete(`${API_URL}/thread/${thread.threadId}`).then(() => {
         Allthreads.setThreads((prev) => {
-            const filtered = prev.filter(
-              (t) => t.threadId !== thread.threadId
-            );
+          const filtered = prev.filter((t) => t.threadId !== thread.threadId);
 
-            return [...filtered]})
-      })
-      
+          return [...filtered];
+        });
+      });
+
+      if (ActiveThread.threadId == thread.threadId) {
+        Active.setActiveMessages([]);
+        ActiveThread.setThreadId("null");
+      }
     } catch (e) {
       console.log("Error occur during Deleting the thread: " + e);
     }
@@ -66,7 +69,7 @@ const Sidebar = () => {
 
           <div className="sidebar-actions">
             <button className="action-btn new-chat-btn" onClick={SetNewChat}>
-              <i className="fa-regular fa-comment"></i>
+              <i className="fa-regular fa-pen-to-square"></i>
               <span>New Chat</span>
             </button>
             <button className="action-btn explore-btn">
@@ -123,8 +126,12 @@ const Sidebar = () => {
             <i className="fa-solid fa-bars"></i>
           </button>
 
-          <button className="collapsed-btn" aria-label="New chat">
-            <i className="fa-regular fa-comment"></i>
+          <button
+            onClick={SetNewChat}
+            className="collapsed-btn"
+            aria-label="New chat"
+          >
+            <i className="fa-regular fa-pen-to-square"></i>
           </button>
 
           <div className="collapsed-spacer"></div>

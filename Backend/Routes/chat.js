@@ -111,14 +111,14 @@ router.get("/thread/:id", async (req, res) => {
 router.delete("/thread/:id", async (req, res) => {
   try {
     const threadID = req.params.id;
-    const thread = await Thread.findOneAndDelete({ threadID });
+    const thread = await Thread.findOneAndDelete({ threadId: threadID });
 
     if (!thread) {
-      res.status(404).json("Thread Not Found");
+      res.status(404).json( {success: false , message: "Thread Not Found"});
     }
 
     console.log(thread.title, "Deleted Successfully");
-    res.status(200).json({ success: `${thread.title} Deleted Successfully` });
+    res.status(200).json({ success:true, message: `${thread.title} Deleted Successfully` });
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: "Error occur during deleting the thread." });

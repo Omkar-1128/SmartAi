@@ -8,7 +8,7 @@
 
 .sidebar-header {
   padding: 16px 20px;
-  border-bottom: 1px solid #2A2B32;
+  border-bottom: 1px solid #2a2b32;
 }
 
 .header-controls {
@@ -23,7 +23,7 @@
   height: 40px;
   border: none;
   background: transparent;
-  color: #ECECF1;
+  color: #ececf1;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -35,13 +35,13 @@
 
 .toggle-btn:hover,
 .search-btn:hover {
-  background-color: #2A2B32;
+  background-color: #2a2b32;
 }
 
 /* Sidebar Actions */
 .sidebar-actions {
   padding: 16px 12px;
-  border-bottom: 1px solid #2A2B32;
+  border-bottom: 1px solid #2a2b32;
 }
 
 .action-btn {
@@ -49,7 +49,7 @@
   height: 44px;
   border: none;
   background: transparent;
-  color: #ECECF1;
+  color: #ececf1;
   border-radius: 12px;
   cursor: pointer;
   display: flex;
@@ -66,13 +66,12 @@
 }
 
 .action-btn:hover {
-  background-color: #2A2B32;
+  background-color: #2a2b32;
 }
 
 .clickedThread {
-  background-color: #2A2B32;
+  background-color: #2a2b32;
   border-radius: 12px;
-  
 }
 
 .action-btn i {
@@ -99,7 +98,7 @@
 .section-title {
   font-size: 12px;
   font-weight: 600;
-  color: #9CA3AF;
+  color: #9ca3af;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 12px 12px;
@@ -115,7 +114,7 @@
   height: 40px;
   border: none;
   background: transparent;
-  color: #ECECF1;
+  color: #ececf1;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -128,7 +127,7 @@
 }
 
 .settings-btn:hover {
-  background-color: #2A2B32;
+  background-color: #2a2b32;
 }
 
 /* Sidebar Collapsed State */
@@ -145,7 +144,7 @@
   height: 40px;
   border: none;
   background: transparent;
-  color: #ECECF1;
+  color: #ececf1;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -157,7 +156,7 @@
 }
 
 .collapsed-btn:hover {
-  background-color: #2A2B32;
+  background-color: #2a2b32;
 }
 
 .collapsed-spacer {
@@ -169,25 +168,37 @@
   margin-top: auto;
 }
 
+.delete-icon {
+  opacity: 0;
+  color: #9ca3af;
+  margin-left: auto;
+  /* transition: opacity 0.2s ease, color 0.2s ease; */
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
+  .clickedThread .delete-icon {
+    opacity: 1;
+    color: #ef4444;
+  }
+
   .sidebar-header {
     padding: 12px 16px;
   }
-  
+
   .sidebar-actions {
     padding: 12px 8px;
   }
-  
+
   .sidebar-footer {
     padding: 12px 8px;
   }
-  
+
   .action-btn {
     height: 48px;
     font-size: 16px;
   }
-  
+
   .toggle-btn,
   .search-btn,
   .settings-btn {
@@ -201,36 +212,44 @@
 }
 
 @media (max-width: 480px) {
+    .clickedThread .delete-icon {
+    opacity: 1;
+    color: #ef4444;
+  }
   .sidebar-header {
     padding: 8px 12px;
   }
-  
+
   .sidebar-actions {
     padding: 8px;
   }
-  
+
   .sidebar-footer {
     padding: 8px;
   }
 }
 /* Better mobile touch interactions */
 @media (max-width: 768px) {
+    .clickedThread .delete-icon {
+    opacity: 1;
+    color: #ef4444;
+  }
   .sidebar-content {
     height: 100vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   /* Larger touch targets */
   .action-btn,
   .toggle-btn,
   .search-btn,
-  .settings-btn ,
-  .thread{
+  .settings-btn,
+  .thread {
     min-height: 44px;
     touch-action: manipulation;
   }
-  
+
   /* Prevent double-tap zoom */
   .sidebar-header,
   .sidebar-actions,
@@ -245,7 +264,7 @@
 .search-btn:focus-visible,
 .settings-btn:focus-visible,
 .collapsed-btn:focus-visible {
-  outline: 2px solid #10A37F;
+  outline: 2px solid #10a37f;
   outline-offset: 2px;
 }
 
@@ -257,7 +276,7 @@
 .collapsed-btn:active,
 .thread:active {
   transform: scale(0.98);
-  background-color: #3A3B42;
+  background-color: #3a3b42;
 }
 
 /* Smooth transitions for all interactive elements */
@@ -282,11 +301,11 @@
 }
 
 .recent-chat-item:hover {
-  background-color: #2A2B32;
+  background-color: #2a2b32;
 }
 
 .recent-chat-item.active {
-  background-color: #10A37F;
+  background-color: #10a37f;
   color: white;
 }
 
@@ -300,7 +319,7 @@
 
 .recent-chat-time {
   font-size: 12px;
-  color: #9CA3AF;
+  color: #9ca3af;
   margin-left: auto;
   flex-shrink: 0;
 }
@@ -310,7 +329,7 @@
   .sidebar {
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .sidebar-content,
   .sidebar-collapsed {
     transition: opacity 0.2s ease;
@@ -322,11 +341,11 @@
   .sidebar {
     background-color: #1a1a1a;
   }
-  
+
   .sidebar-header {
     border-bottom-color: #333;
   }
-  
+
   .sidebar-actions {
     border-bottom-color: #333;
   }
@@ -352,8 +371,13 @@
 }
 
 .thread:hover {
-  background-color: #2A2B32;
+  background-color: #2a2b32;
   border: 1px solid none;
   border-radius: 0.8rem;
   cursor: pointer;
+}
+
+.thread:hover .delete-icon {
+  opacity: 1;
+  color: #ef4444;
 }

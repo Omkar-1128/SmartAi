@@ -1,12 +1,19 @@
 import { useContext } from "react";
-import { CrossContext , ThreadContext, ActiveMessages , ActiveThreadId } from "../context";
+import {
+  CrossContext,
+  ThreadContext,
+  ActiveMessages,
+  ActiveThreadId,
+} from "../context";
 import "./Sidebar.css";
+import axios from "axios";
 
 const Sidebar = () => {
   const value = useContext(CrossContext);
   const Allthreads = useContext(ThreadContext);
   const Active = useContext(ActiveMessages);
   const ActiveThread = useContext(ActiveThreadId);
+  const API_URL = import.meta.env.VITE_THREAD_API_URL;
 
   function toggleSidebar() {
     value.setCross(!value.cross);
@@ -20,6 +27,22 @@ const Sidebar = () => {
   function SetNewChat() {
     Active.setActiveMessages([]);
     ActiveThread.setThreadId("null");
+  }
+
+  async function HandleDelete(thread) {
+    try {
+      await axios.delete(`${API_URL}/thread/${thread.threadId}`).then(() => {
+        Allthreads.setThreads((prev) => {
+            const filtered = prev.filter(
+              (t) => t.threadId !== thread.threadId
+            );
+
+            return [...filtered]})
+      })
+      
+    } catch (e) {
+      console.log("Error occur during Deleting the thread: " + e);
+    }
   }
 
   return (
@@ -54,12 +77,31 @@ const Sidebar = () => {
 
           <div className="sidebar-footer">
             <div className="recents-section">
-              {Allthreads.threads.length === 0 && <h3 className="section-title">No Recents</h3>} 
-              {Allthreads.threads.length != 0 && <h3 className="section-title">Recents</h3>} 
+              {Allthreads.threads.length === 0 && (
+                <h3 className="section-title">No Recents</h3>
+              )}
+              {Allthreads.threads.length != 0 && (
+                <h3 className="section-title">Recents</h3>
+              )}
               <div className="recents-list">
-                  {Allthreads.threads.map((thread) => {
-                    const isActive = ActiveThread.threadId === thread.threadId;
-                  return ( <div onClick={() => HandleThreadsClicks(thread)} className={`thread ${isActive? "clickedThread" : ""}`} key={thread.threadId}>{thread.title}</div>);
+                {Allthreads.threads.map((thread) => {
+                  const isActive = ActiveThread.threadId === thread.threadId;
+                  return (
+                    <div
+                      onClick={() => HandleThreadsClicks(thread)}
+                      className={`thread ${isActive ? "clickedThread" : ""}`}
+                      key={thread.threadId}
+                    >
+                      {thread.title}{" "}
+                      <i
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          HandleDelete(thread);
+                        }}
+                        className="fa-solid fa-trash-can delete-icon"
+                      ></i>
+                    </div>
+                  );
                 })}
               </div>
             </div>

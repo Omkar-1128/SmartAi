@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { CrossContext } from "../context";
 import "./Navbar.css";
 
@@ -8,6 +8,18 @@ const Navbar = () => {
   function toggleSidebar() {
     value.setCross(!value.cross);
   }
+
+  function handleProfile() {
+    value.setProfileDropDown(!value.profileDropDown);
+  }
+
+  useEffect(() => {
+    if(value.theme) {
+      document.body.classList.add("light-theme");
+    } else {
+      document.body.classList.remove("light-theme");
+    }
+  } , [value.theme])
 
   return (
     <div className="navbar-container">
@@ -23,7 +35,7 @@ const Navbar = () => {
       </div>
       
       <div className="navbar-right">
-        <button className="profile-btn" aria-label="Profile">
+        <button onClick={handleProfile} className="profile-btn" aria-label="Profile">
           <i className="fa-solid fa-user"></i>
         </button>
       </div>

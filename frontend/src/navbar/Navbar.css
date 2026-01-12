@@ -1,3 +1,13 @@
+:root {
+  /* Navbar */
+  --bg-navbar-btn: #2a2b32;
+  --bg-navbar-btn-hover: #3a3b42;
+
+  --badge-bg: linear-gradient(135deg, #10A37F 0%, #0d8f6b 100%);
+  --badge-border: rgba(255, 255, 255, 0.1);
+  --badge-shadow: rgba(16, 163, 127, 0.2);
+}
+
 .navbar-container {
   display: flex;
   align-items: center;
@@ -34,7 +44,7 @@
 }
 
 .mobile-menu-btn:hover {
-  background-color: #2A2B32;
+  background-color: var(--bg-navbar-btn);
 }
 
 .model-badge {
@@ -46,15 +56,15 @@
   color: #ECECF1;
   background: linear-gradient(135deg, #10A37F 0%, #0d8f6b 100%);
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 8px rgba(16, 163, 127, 0.2);
+  border: 1px solid var(--badge-border);
+  box-shadow: 0 2px 8px var(--badge-shadow)
 }
 
 .profile-btn {
   width: 36px;
   height: 36px;
   border: none;
-  background: #2A2B32;
+  background: var(--bg-navbar-btn);
   color: #ECECF1;
   border-radius: 50%;
   cursor: pointer;
@@ -66,7 +76,7 @@
 }
 
 .profile-btn:hover {
-  background-color: #3A3B42;
+  background-color: var(--bg-navbar-btn-hover);
 }
 
 /* Mobile styles */

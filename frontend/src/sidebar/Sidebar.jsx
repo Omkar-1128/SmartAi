@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext ,useEffect } from "react";
 import {
   CrossContext,
   ThreadContext,
@@ -18,6 +18,15 @@ const Sidebar = () => {
   function toggleSidebar() {
     value.setCross(!value.cross);
   }
+
+  useEffect(() => {
+    if(value.theme) {
+      document.body.classList.add("light-theme");
+    } else {
+      document.body.classList.remove("light-theme");
+    }
+    
+  } , [value.theme])
 
   function HandleThreadsClicks(thread) {
     Active.setActiveMessages(thread.messages);

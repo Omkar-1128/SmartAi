@@ -1,3 +1,35 @@
+:root {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2a2b32;
+  --bg-hover: #3a3b42;
+
+  --text-primary: #ececf1;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+
+  --border-color: #2a2b32;
+  --border-light: #333;
+
+  --accent: var(--accent);
+  --danger: #ef4444;
+}
+
+.light-theme {
+  --bg-primary: #f1f4f8;
+  --bg-secondary: #e5e7eb;
+  --bg-hover: #d1d5db;
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+
+  --border-color: #e5e7eb;
+  --border-light: #d1d5db;
+
+  --accent: #10a37f;
+  --danger: #dc2626;
+}
+
 /* Sidebar Content - Open State */
 .sidebar-content {
   display: flex;
@@ -8,7 +40,7 @@
 
 .sidebar-header {
   padding: 16px 20px;
-  border-bottom: 1px solid #2a2b32;
+  border-bottom: 1px solid var(--bg-secondary);
 }
 
 .header-controls {
@@ -23,7 +55,7 @@
   height: 40px;
   border: none;
   background: transparent;
-  color: #ececf1;
+  color: var(--text-primary);
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -35,13 +67,13 @@
 
 .toggle-btn:hover,
 .search-btn:hover {
-  background-color: #2a2b32;
+  background-color: var(--bg-secondary);
 }
 
 /* Sidebar Actions */
 .sidebar-actions {
   padding: 16px 12px;
-  border-bottom: 1px solid #2a2b32;
+  border-bottom: 1px solid var(--bg-secondary);
 }
 
 .action-btn {
@@ -49,7 +81,7 @@
   height: 44px;
   border: none;
   background: transparent;
-  color: #ececf1;
+  color: var(--text-primary);
   border-radius: 12px;
   cursor: pointer;
   display: flex;
@@ -66,11 +98,11 @@
 }
 
 .action-btn:hover {
-  background-color: #2a2b32;
+  background-color: var(--bg-secondary);
 }
 
 .clickedThread {
-  background-color: #2a2b32;
+  background-color: var(--bg-secondary);
   border-radius: 12px;
 }
 
@@ -98,7 +130,7 @@
 .section-title {
   font-size: 12px;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--text-secondar);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 12px 12px;
@@ -114,7 +146,7 @@
   height: 40px;
   border: none;
   background: transparent;
-  color: #ececf1;
+  color: var(--text-primary);
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -127,7 +159,7 @@
 }
 
 .settings-btn:hover {
-  background-color: #2a2b32;
+  background-color: var(--bg-secondary);
 }
 
 /* Sidebar Collapsed State */
@@ -144,7 +176,7 @@
   height: 40px;
   border: none;
   background: transparent;
-  color: #ececf1;
+  color: var(--text-primary);
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -156,7 +188,7 @@
 }
 
 .collapsed-btn:hover {
-  background-color: #2a2b32;
+  background-color: var(--bg-secondary);
 }
 
 .collapsed-spacer {
@@ -170,7 +202,7 @@
 
 .delete-icon {
   opacity: 0;
-  color: #9ca3af;
+  color: var(--text-secondar);
   margin-left: auto;
   /* transition: opacity 0.2s ease, color 0.2s ease; */
 }
@@ -179,7 +211,7 @@
 @media (max-width: 768px) {
   .clickedThread .delete-icon {
     opacity: 1;
-    color: #ef4444;
+    color: var(--danger);
   }
 
   .sidebar-header {
@@ -214,7 +246,7 @@
 @media (max-width: 480px) {
     .clickedThread .delete-icon {
     opacity: 1;
-    color: #ef4444;
+    color: var(--danger);
   }
   .sidebar-header {
     padding: 8px 12px;
@@ -232,7 +264,7 @@
 @media (max-width: 768px) {
     .clickedThread .delete-icon {
     opacity: 1;
-    color: #ef4444;
+    color: var(--danger);
   }
   .sidebar-content {
     height: 100vh;
@@ -264,7 +296,7 @@
 .search-btn:focus-visible,
 .settings-btn:focus-visible,
 .collapsed-btn:focus-visible {
-  outline: 2px solid #10a37f;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -276,7 +308,7 @@
 .collapsed-btn:active,
 .thread:active {
   transform: scale(0.98);
-  background-color: #3a3b42;
+  background-color: var(--bg-hover);
 }
 
 /* Smooth transitions for all interactive elements */
@@ -301,11 +333,11 @@
 }
 
 .recent-chat-item:hover {
-  background-color: #2a2b32;
+  background-color: var(--bg-secondary);
 }
 
 .recent-chat-item.active {
-  background-color: #10a37f;
+  background-color: var(--accent);
   color: white;
 }
 
@@ -319,7 +351,7 @@
 
 .recent-chat-time {
   font-size: 12px;
-  color: #9ca3af;
+  color: var(--text-secondar);
   margin-left: auto;
   flex-shrink: 0;
 }
@@ -339,15 +371,15 @@
 /* Dark mode enhancements */
 @media (prefers-color-scheme: dark) {
   .sidebar {
-    background-color: #1a1a1a;
+    background-color: var(--bg-primary);
   }
 
   .sidebar-header {
-    border-bottom-color: #333;
+    border-bottom-color: var(--border-light);
   }
 
   .sidebar-actions {
-    border-bottom-color: #333;
+    border-bottom-color: var(--border-light);
   }
 }
 
@@ -371,7 +403,7 @@
 }
 
 .thread:hover {
-  background-color: #2a2b32;
+  background-color: var(--bg-secondary);
   border: 1px solid none;
   border-radius: 0.8rem;
   cursor: pointer;
@@ -384,5 +416,5 @@
 
 .thread .delete-icon:hover {
   opacity: 1;
-  color: #ef4444;
+  color: var(--danger);
 }

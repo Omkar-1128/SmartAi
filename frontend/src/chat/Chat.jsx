@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Chat.css";
 import { useContext } from "react";
 import {
+  CrossContext,
   ActiveMessages,
   ActiveThreadId,
   UserMessageContext,
@@ -9,9 +10,10 @@ import {
 } from "../context.jsx";
 import axios from "axios";
 import { HashLoader } from "react-spinners";
-import ReactMarkdown from "react-markdown"
-import rehypeHighlight from "rehype-highlight"
-import "highlight.js/styles/github-dark.css";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+// import "highlight.js/styles/github-dark.css";
+// import "highlight.js/styles/github.css";
 // import "highlight.js/styles/atom-one-dark.css";
 // import "highlight.js/styles/monokai.css";
 
@@ -20,9 +22,25 @@ const Chat = () => {
   const userMessage = useContext(UserMessageContext);
   const currThreadId = useContext(ActiveThreadId);
   const threads = useContext(ThreadContext);
+  const crossValues = useContext(CrossContext);
   const API_URL = import.meta.env.VITE_THREAD_API_URL;
 
-  const [loader , setLoader] = useState(false);
+  const [loader, setLoader] = useState(false);
+
+  useEffect(() => {
+    let themeLink = document.getElementById("hljs-theme");
+
+    if (!themeLink) {
+      themeLink = document.createElement("link");
+      themeLink.id = "hljs-theme";
+      themeLink.rel = "stylesheet";
+      document.head.appendChild(themeLink);
+    }
+
+    themeLink.href = crossValues.theme
+      ? "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.css"
+      : "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css";
+  }, [crossValues.theme]);
 
   async function sendRequest(text) {
     try {
@@ -62,6 +80,14 @@ const Chat = () => {
     }
   }
 
+  useEffect(() => {
+    if (crossValues.theme) {
+      document.body.classList.add("light-theme");
+    } else {
+      document.body.classList.remove("light-theme");
+    }
+  }, [crossValues.theme]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -79,13 +105,45 @@ const Chat = () => {
     await sendRequest(text);
   };
 
+  function handleTheme() {
+    crossValues.setTheme(!crossValues.theme);
+  }
+
   return (
     <>
-      {threadMessages.activeMessages.length === 0 && (
+      {crossValues.profileDropDown && (
+        <div className="ProfileDropDown">
+          <div className="ProfileUserName">Hello, LightningAce</div>
+          <div className="ProfileItems">
+            <div>
+              <i className="fa-solid fa-crown"></i>Upgrade plan
+            </div>
+            <div onClick={handleTheme}>
+              <i
+                className={`fa-solid ${
+                  crossValues.theme ? "fa-moon" : "fa-sun"
+                }`}
+              ></i>
+              Theme
+            </div>
+            <div>
+              <i className="fa-regular fa-circle-question"></i>Help
+            </div>
+            <div>
+              <i className="fa-solid fa-arrow-right-from-bracket"></i>Log out
+            </div>
+          </div>
+        </div>
+        //     theme light icon
+      )}
+
+      {(threadMessages.activeMessages || []).length === 0 && (
         <div className="chat-container">
-          {loader && <div className="Loader">
-            <HashLoader color="#10A37F" size={50}/>
-          </div>}
+          {loader && (
+            <div className="Loader">
+              <HashLoader color="#10A37F" size={50} />
+            </div>
+          )}
           <div className="welcome-section">
             <div className="welcome-icon">
               <i className="fa-solid fa-robot"></i>
@@ -98,11 +156,13 @@ const Chat = () => {
         </div>
       )}
 
-      {threadMessages.activeMessages.length != 0 && (
+      {(threadMessages.activeMessages || []).length != 0 && (
         <div className="parent-container">
-          {loader && <div className="Loader">
-            <HashLoader color="#10A37F" size={50}/>
-          </div>}
+          {loader && (
+            <div className="Loader">
+              <HashLoader color="#10A37F" size={50} />
+            </div>
+          )}
           <div className="chat-container">
             <div className="chat-content">
               <div className="chat-inner">
@@ -114,7 +174,11 @@ const Chat = () => {
                     }`}
                   >
                     {msg.role == "user" && msg.content}
-                    {msg.role == "assistant" && <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{msg.content}</ReactMarkdown>}
+                    {msg.role == "assistant" && (
+                      <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                        {msg.content}
+                      </ReactMarkdown>
+                    )}
                   </div>
                 ))}
               </div>

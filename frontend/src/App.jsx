@@ -13,6 +13,8 @@ function App() {
   const [activeMessages, setActiveMessages] = useState([]);
   const [threadId , setThreadId] = useState("null");
   const [message, setMessage] = useState("");
+  const [profileDropDown , setProfileDropDown] = useState(false);
+  const [theme , setTheme] = useState(true);   // false for dark theme and true for light theme
 
   const GetThreads = import.meta.env.VITE_THREAD_API_URL;
   useEffect(() => {
@@ -26,6 +28,14 @@ function App() {
         console.log("Error Occured during featching thread: " + e.message);
       });
   }, []);
+
+  useEffect(() => {
+    if(theme) {
+      document.body.classList.add("light-theme");
+    } else {
+      document.body.classList.remove("light-theme");
+    }
+  }, [theme])
 
   useEffect(() => {
     const checkMobile = () => {
@@ -55,7 +65,7 @@ function App() {
       >
         <ThreadContext.Provider value={{threads , setThreads}}>
           <ActiveThreadId.Provider value={{threadId: threadId , setThreadId: setThreadId}}>
-          <CrossContext.Provider value={{ cross, setCross }}>
+          <CrossContext.Provider value={{ cross, setCross , profileDropDown , setProfileDropDown , theme , setTheme}}>
             {/* Mobile overlay */}
             {isMobile && cross && (
               <div className="mobile-overlay" onClick={handleOverlayClick} />

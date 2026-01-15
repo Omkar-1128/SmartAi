@@ -8,6 +8,11 @@
   --badge-shadow: rgba(16, 163, 127, 0.2);
 }
 
+.light-theme {
+  --badge-border: rgba(0, 0, 0, 0.08);
+  --badge-shadow: rgba(16, 163, 127, 0.15);
+}
+
 .navbar-container {
   display: flex;
   align-items: center;

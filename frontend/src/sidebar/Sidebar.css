@@ -411,7 +411,7 @@
 
 .thread:hover .delete-icon {
   opacity: 1;
-  color: white;
+  color: var(--text-primary);
 }
 
 .thread .delete-icon:hover {

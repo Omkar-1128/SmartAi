@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Chat.css";
 import { useContext } from "react";
 import {
@@ -26,6 +26,25 @@ const Chat = () => {
   const API_URL = import.meta.env.VITE_THREAD_API_URL;
 
   const [loader, setLoader] = useState(false);
+  const [fullReply, setFullReply] = useState("");
+  const profileRef = useRef(null);
+  const bottomRef = useRef(null);
+
+  const [isUserAtBottom, setIsUserAtBottom] = useState(true);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        crossValues.setProfileDropDown(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     let themeLink = document.getElementById("hljs-theme");
@@ -51,11 +70,12 @@ const Chat = () => {
           message: { content: text, role: "user" },
         })
         .then((res) => {
+          setFullReply(res.data.assistance.content);
           threadMessages.setActiveMessages((prev) => [
             ...prev,
             {
               role: res.data.assistance.role,
-              content: res.data.assistance.content,
+              content: "",
             },
           ]);
           currThreadId.setThreadId(res.data.threadId);
@@ -79,6 +99,38 @@ const Chat = () => {
       console.log("Error occur during getting responce of assistant: " + e);
     }
   }
+
+  useEffect(() => {
+    if (!fullReply) return;
+
+    const content = fullReply.split("");
+
+    let idx = 0;
+    const interval = setInterval(() => {
+      threadMessages.setActiveMessages((prev) => {
+        const updated = [...prev];
+        const updatedLastIdx = updated.length - 1;
+
+        if (updated[updatedLastIdx]?.role == "assistant") {
+          updated[updatedLastIdx] = {
+            ...updated[updatedLastIdx],
+            content: fullReply.slice(0, idx + 1),
+          };
+        }
+
+        return updated;
+      });
+
+      if (isUserAtBottom) {
+        scrollToBottom(false);
+      }
+      idx++;
+
+      if (idx >= content.length) clearInterval(interval);
+    }, 10);
+
+    return () => clearInterval(interval);
+  }, [fullReply, isUserAtBottom]);
 
   useEffect(() => {
     if (crossValues.theme) {
@@ -109,10 +161,32 @@ const Chat = () => {
     crossValues.setTheme(!crossValues.theme);
   }
 
+  useEffect(() => {
+    if (isUserAtBottom) {
+      scrollToBottom(true);
+    }
+  }, [currThreadId.threadId]);
+
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+
+    // thoda tolerance rakho (10–20px)
+    const isAtBottom = scrollHeight - scrollTop - clientHeight < 20;
+
+    setIsUserAtBottom(isAtBottom);
+  };
+
+  const scrollToBottom = (smooth = false) => {
+  bottomRef.current?.scrollIntoView({
+    behavior: smooth ? "smooth" : "auto",
+    block: "end",
+  });
+};
+
   return (
     <>
       {crossValues.profileDropDown && (
-        <div className="ProfileDropDown">
+        <div className="ProfileDropDown" ref={profileRef}>
           <div className="ProfileUserName">Hello, LightningAce</div>
           <div className="ProfileItems">
             <div>
@@ -164,7 +238,7 @@ const Chat = () => {
             </div>
           )}
           <div className="chat-container">
-            <div className="chat-content">
+            <div className="chat-content" onScroll={handleScroll}>
               <div className="chat-inner">
                 {threadMessages.activeMessages.map((msg, index) => (
                   <div
@@ -181,6 +255,8 @@ const Chat = () => {
                     )}
                   </div>
                 ))}
+
+                <div ref={bottomRef}></div>
               </div>
             </div>
           </div>

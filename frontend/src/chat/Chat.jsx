@@ -1,4 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
+import toast, { Toaster } from "react-hot-toast";
 import "./Chat.css";
 import { useContext } from "react";
 import {
@@ -9,9 +13,10 @@ import {
   ThreadContext,
 } from "../context.jsx";
 import axios from "axios";
-import { HashLoader } from "react-spinners";
+import { HashLoader, ScaleLoader } from "react-spinners";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
+import Search from "./Search.jsx";
 // import "highlight.js/styles/github-dark.css";
 // import "highlight.js/styles/github.css";
 // import "highlight.js/styles/atom-one-dark.css";
@@ -31,6 +36,30 @@ const Chat = () => {
   const bottomRef = useRef(null);
 
   const [isUserAtBottom, setIsUserAtBottom] = useState(true);
+
+  const { transcript, listening, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
+
+  useEffect(() => {
+    if (listening) {
+      userMessage.setMessage(transcript);
+    }
+  }, [transcript, listening]);
+
+  useEffect(() => {
+    if (!browserSupportsSpeechRecognition) {
+      toast.dismiss();
+      toast.error("Browser does not support speech recognition", {
+        style: {
+          border: "1px solid #dc2626",
+          background: "#fee2e2",
+          color: "#7f1d1d",
+          fontWeight: "500",
+          borderRadius: "10px",
+        },
+      });
+    }
+  }, [browserSupportsSpeechRecognition]);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -143,6 +172,8 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    SpeechRecognition.stopListening();
+
     const text = userMessage.message.trim();
     if (!text) return;
 
@@ -177,11 +208,11 @@ const Chat = () => {
   };
 
   const scrollToBottom = (smooth = false) => {
-  bottomRef.current?.scrollIntoView({
-    behavior: smooth ? "smooth" : "auto",
-    block: "end",
-  });
-};
+    bottomRef.current?.scrollIntoView({
+      behavior: smooth ? "smooth" : "auto",
+      block: "end",
+    });
+  };
 
   return (
     <>
@@ -218,6 +249,7 @@ const Chat = () => {
               <HashLoader color="#10A37F" size={50} />
             </div>
           )}
+          {crossValues.search && <Search />}
           <div className="welcome-section">
             <div className="welcome-icon">
               <i className="fa-solid fa-robot"></i>
@@ -237,6 +269,7 @@ const Chat = () => {
               <HashLoader color="#10A37F" size={50} />
             </div>
           )}
+          {crossValues.search && <Search />}
           <div className="chat-container">
             <div className="chat-content" onScroll={handleScroll}>
               <div className="chat-inner">
@@ -266,13 +299,55 @@ const Chat = () => {
       <div className="chat-input-wrapper">
         <form className="chat-input-form" onSubmit={handleSubmit}>
           <div className="chat-input">
-            <input
-              type="text"
-              placeholder="Ask anything..."
-              value={userMessage.message}
-              onChange={(e) => userMessage.setMessage(e.target.value)}
-              className="chat-input-field"
-            />
+            {listening && (
+              <div className="speech-loader inside-input">
+                <ScaleLoader
+                  height={25}
+                  width={6}
+                  radius={3}
+                  margin={2}
+                  color="#10A37F"
+                />
+              </div>
+            )}
+            {listening ? (
+              <textarea
+                type="text"
+                placeholder="Ask anything..."
+                value={userMessage.message}
+                onChange={(e) => userMessage.setMessage(e.target.value)}
+                className="chat-input-field textAreaInput"
+              ></textarea>
+            ) : (
+              <input
+                type="text"
+                placeholder="Ask anything..."
+                value={userMessage.message}
+                onChange={(e) => userMessage.setMessage(e.target.value)}
+                className="chat-input-field"
+              />
+            )}
+
+            {listening ? (
+              <button
+                type="button"
+                onClick={SpeechRecognition.stopListening}
+                className="microphone-btn micOn"
+              >
+                <i className="fa-solid fa-microphone"></i>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() =>
+                  SpeechRecognition.startListening({ continuous: true })
+                }
+                className="microphone-btn micOff"
+              >
+                <i className="fa-solid fa-microphone-slash"></i>
+              </button>
+            )}
+
             <button
               type="submit"
               className="send-btn"
@@ -284,6 +359,7 @@ const Chat = () => {
           </div>
         </form>
       </div>
+      <Toaster />
     </>
   );
 };

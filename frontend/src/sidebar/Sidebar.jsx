@@ -57,6 +57,10 @@ const Sidebar = () => {
     }
   }
 
+  function HandleSearch() {
+    value.setSearch(!value.search);
+  }
+
   return (
     <>
       {value.cross && (
@@ -70,7 +74,7 @@ const Sidebar = () => {
               >
                 <i className="fa-solid fa-bars"></i>
               </button>
-              <button className="search-btn" aria-label="Search">
+              <button className="search-btn" onClick={HandleSearch} aria-label="Search">
                 <i className="fa-solid fa-magnifying-glass"></i>
               </button>
             </div>

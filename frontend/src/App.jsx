@@ -15,6 +15,8 @@ function App() {
   const [message, setMessage] = useState("");
   const [profileDropDown , setProfileDropDown] = useState(false);
   const [theme , setTheme] = useState(true);   // false for dark theme and true for light theme
+  const [search , setSearch] = useState(false);
+  const [searchTitle , setSearchTitle] = useState("");
 
   const GetThreads = import.meta.env.VITE_THREAD_API_URL;
   useEffect(() => {
@@ -65,7 +67,7 @@ function App() {
       >
         <ThreadContext.Provider value={{threads , setThreads}}>
           <ActiveThreadId.Provider value={{threadId: threadId , setThreadId: setThreadId}}>
-          <CrossContext.Provider value={{ cross, setCross , profileDropDown , setProfileDropDown , theme , setTheme}}>
+          <CrossContext.Provider value={{ cross, setCross , profileDropDown , setProfileDropDown , theme , setTheme , search , setSearch , searchTitle , setSearchTitle}}>
             {/* Mobile overlay */}
             {isMobile && cross && (
               <div className="mobile-overlay" onClick={handleOverlayClick} />

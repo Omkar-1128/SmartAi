@@ -3,7 +3,6 @@ import Navbar from "./navbar/Navbar";
 import Chat from "./chat/Chat";
 import {
   CrossContext,
-  ThreadContext,
   ActiveMessages,
   ActiveThreadId,
   UserMessageContext,
@@ -18,7 +17,6 @@ import { useCookies } from "react-cookie";
 function App() {
   const [cross, setCross] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  const [threads, setThreads] = useState([]);
   const [activeMessages, setActiveMessages] = useState([]);
   const [threadId, setThreadId] = useState("null");
   const [message, setMessage] = useState("");
@@ -26,11 +24,12 @@ function App() {
   const [theme, setTheme] = useState(true); // false for dark theme and true for light theme
   const [search, setSearch] = useState(false);
   const [searchTitle, setSearchTitle] = useState("");
+  const [userThreads, setUserThreads] = useState([]);
   const API_URL = import.meta.env.VITE_THREAD_API_URL;
 
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies(["token"]);
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState({});
   useEffect(() => {
     const verifyCookie = async () => {
       try {
@@ -41,8 +40,8 @@ function App() {
         );
 
         if (data.success) {
-          setUsername(data.user);
-          toast(`Hello ${data.user}`, { position: "top-right" });
+          setUser(data.user);
+          toast(`Hello ${data.user.username}`, { position: "top-right" });
         } else {
           removeCookie("token");
           navigate("/");
@@ -58,30 +57,33 @@ function App() {
   }, [navigate, removeCookie]);
   const Logout = async () => {
     try {
-    await axios.post(
-      `${API_URL}/logout`,
-      {},
-      { withCredentials: true }
-    );
-  } catch (e) {
-    console.log("Logout error", e);
-  } finally {
-    navigate("/");
-  }
+      await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+    } catch (e) {
+      console.log("Logout error", e);
+    } finally {
+      navigate("/");
+    }
   };
 
-  const GetThreads = import.meta.env.VITE_THREAD_API_URL;
-  useEffect(() => {
+  function GetThreads() {
+    if (!user?.id) return;
+    const GetThreads = import.meta.env.VITE_THREAD_API_URL;
     axios
-      .get(`${GetThreads}/thread`)
+      .get(`${GetThreads}/thread/user/${user.id}`)
       .then((res) => {
         const threadArr = res.data;
-        setThreads(threadArr);
+        setUserThreads(threadArr);
       })
       .catch((e) => {
         console.log("Error Occured during featching thread: " + e.message);
       });
-  }, []);
+  }
+
+  useEffect(() => {
+    if (user?.id) {
+      GetThreads();
+    }
+  }, [user.id]);
 
   useEffect(() => {
     if (theme) {
@@ -120,50 +122,47 @@ function App() {
             setActiveMessages: setActiveMessages,
           }}
         >
-          <ThreadContext.Provider value={{ threads, setThreads }}>
-            <ActiveThreadId.Provider
-              value={{ threadId: threadId, setThreadId: setThreadId }}
+          <ActiveThreadId.Provider
+            value={{ threadId: threadId, setThreadId: setThreadId }}
+          >
+            <CrossContext.Provider
+              value={{
+                cross,
+                setCross,
+                profileDropDown,
+                setProfileDropDown,
+                theme,
+                setTheme,
+                search,
+                setSearch,
+                searchTitle,
+                setSearchTitle,
+                user,
+                Logout,
+                userThreads,
+                setUserThreads,
+              }}
             >
-              <CrossContext.Provider
-                value={{
-                  cross,
-                  setCross,
-                  profileDropDown,
-                  setProfileDropDown,
-                  theme,
-                  setTheme,
-                  search,
-                  setSearch,
-                  searchTitle,
-                  setSearchTitle,
-                  username,
-                  Logout,
-                }}
-              >
-                {/* Mobile overlay */}
-                {isMobile && cross && (
-                  <div
-                    className="mobile-overlay"
-                    onClick={handleOverlayClick}
-                  />
-                )}
+              {/* Mobile overlay */}
+              {isMobile && cross && (
+                <div className="mobile-overlay" onClick={handleOverlayClick} />
+              )}
 
-                <div className={`sidebar ${cross ? "open" : "closed"}`}>
-                  <Sidebar />
+              <div className={`sidebar ${cross ? "open" : "closed"}`}>
+                <Sidebar />
+              </div>
+
+              <div className="page">
+                <div className="navbar">
+                  <Navbar />
                 </div>
 
-                <div className="page">
-                  <div className="navbar">
-                    <Navbar />
-                  </div>
-
-                  <div className="chat">
-                    <Chat />
-                  </div>
+                <div className="chat">
+                  <Chat />
                 </div>
-              </CrossContext.Provider>
-            </ActiveThreadId.Provider>
-          </ThreadContext.Provider>
+              </div>
+            </CrossContext.Provider>
+          </ActiveThreadId.Provider>
         </ActiveMessages.Provider>
       </UserMessageContext.Provider>
       <ToastContainer />

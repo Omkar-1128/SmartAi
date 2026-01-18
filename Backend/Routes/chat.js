@@ -1,6 +1,7 @@
 // Creating a test route to test the database connection
 
 import Thread from "../model/Thread.js";
+import User from "../model/User.js";
 import express from "express";
 import { v4 as uuidv4 } from "uuid";
 import GetSmartAiResponse from "../utils/smartai.js";
@@ -26,15 +27,24 @@ router.post("/test", async (req, res) => {
 // Chat Route
 router.post("/chat", async (req, res) => {
   try {
-    let { threadId, message } = req.body;
-    if (!message) {
-      res.status(400).json({ error: "Missing message" });
+    let { threadId, message , userId } = req.body;
+    if (!message || !message.content) {
+      return res.status(400).json({ error: "Missing message" });
     }
+
+    if(!userId) {
+      return res.status(400).json({error: "UserId missing found"})
+    }
+
+    const user = await User.findById(userId);
+    if(!user) {
+      return res.status(400).json({error: "user not found"});
+    } 
 
     let thread = null;
     let Title = "New Chat";
     if (threadId) {
-      thread = await Thread.findOne({ threadId });
+      thread = await Thread.findOne({ threadId , userId });
       if(thread) {
         Title = thread.title;
       }
@@ -44,6 +54,7 @@ router.post("/chat", async (req, res) => {
       threadId = uuidv4();
       Title = await GenerateTitle(message.content);
       const newThread = new Thread({
+      userId: userId,
       threadId: threadId,
       title: Title,
       });
@@ -87,6 +98,18 @@ router.get("/thread", async (req, res) => {
       .json({ error: "Error occur at finding the thread on database" });
   }
 });
+
+// Route to get user threads
+router.get("/thread/user/:id" , async (req , res) => {
+  try {
+    const userId = req.params.id;
+    const threads = await Thread.find({userId}).sort({ updatedAt: -1 });
+    res.send(threads);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({ error: "Error occur for find the user threads in database" })
+  }
+})
 
 // Route to get messages of Individual thread
 router.get("/thread/:id", async (req, res) => {

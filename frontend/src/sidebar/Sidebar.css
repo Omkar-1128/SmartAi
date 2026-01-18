@@ -10,7 +10,7 @@
   --border-color: #2a2b32;
   --border-light: #333;
 
-  --accent: var(--accent);
+  --accent:  #10a37f;
   --danger: #ef4444;
 }
 
@@ -81,7 +81,7 @@
   height: 44px;
   border: none;
   background: transparent;
-  color: var(--text-primary);
+  color:  var(--text-primary);
   border-radius: 12px;
   cursor: pointer;
   display: flex;

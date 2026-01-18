@@ -18,6 +18,10 @@ const MessageSchema = new mongoose.Schema({
 });
 
 const ThreadSchema = mongoose.Schema({
+    userId: {
+        type:String,
+        required:true
+    },
     threadId: {
         type: String,
         required: true,

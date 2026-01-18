@@ -157,10 +157,6 @@ body {
   border-radius: 0.3rem;
 }
 
-span {
-  color: #000;
-}
-
 span a {
   text-decoration: none;
   color: rgba(0, 212, 255, 1);

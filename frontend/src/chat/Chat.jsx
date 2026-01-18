@@ -10,7 +10,6 @@ import {
   ActiveMessages,
   ActiveThreadId,
   UserMessageContext,
-  ThreadContext,
 } from "../context.jsx";
 import axios from "axios";
 import { HashLoader, ScaleLoader } from "react-spinners";
@@ -26,7 +25,6 @@ const Chat = () => {
   const threadMessages = useContext(ActiveMessages);
   const userMessage = useContext(UserMessageContext);
   const currThreadId = useContext(ActiveThreadId);
-  const threads = useContext(ThreadContext);
   const crossValues = useContext(CrossContext);
   const API_URL = import.meta.env.VITE_THREAD_API_URL;
 
@@ -97,6 +95,7 @@ const Chat = () => {
         .post(`${API_URL}/chat`, {
           threadId: currThreadId.threadId,
           message: { content: text, role: "user" },
+          userId: crossValues.user.id
         })
         .then((res) => {
           setFullReply(res.data.assistance.content);
@@ -109,7 +108,7 @@ const Chat = () => {
           ]);
           currThreadId.setThreadId(res.data.threadId);
 
-          threads.setThreads((prev) => {
+          crossValues.setUserThreads((prev) => {
             const updatedThread = {
               title: res.data.title,
               threadId: res.data.threadId,
@@ -218,7 +217,7 @@ const Chat = () => {
     <>
       {crossValues.profileDropDown && (
         <div className="ProfileDropDown" ref={profileRef}>
-          <div className="ProfileUserName">Hello, {crossValues.username}</div>
+          <div className="ProfileUserName">Hello, {crossValues.user.username}</div>
           <div className="ProfileItems">
             <div>
               <i className="fa-solid fa-crown"></i>Upgrade plan

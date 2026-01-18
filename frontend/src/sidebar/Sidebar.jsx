@@ -1,7 +1,6 @@
-import { useContext ,useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   CrossContext,
-  ThreadContext,
   ActiveMessages,
   ActiveThreadId,
 } from "../context";
@@ -10,7 +9,6 @@ import axios from "axios";
 
 const Sidebar = () => {
   const value = useContext(CrossContext);
-  const Allthreads = useContext(ThreadContext);
   const Active = useContext(ActiveMessages);
   const ActiveThread = useContext(ActiveThreadId);
   const API_URL = import.meta.env.VITE_THREAD_API_URL;
@@ -20,13 +18,12 @@ const Sidebar = () => {
   }
 
   useEffect(() => {
-    if(value.theme) {
+    if (value.theme) {
       document.body.classList.add("light-theme");
     } else {
       document.body.classList.remove("light-theme");
     }
-    
-  } , [value.theme])
+  }, [value.theme]);
 
   function HandleThreadsClicks(thread) {
     Active.setActiveMessages(thread.messages);
@@ -41,7 +38,7 @@ const Sidebar = () => {
   async function HandleDelete(thread) {
     try {
       await axios.delete(`${API_URL}/thread/${thread.threadId}`).then(() => {
-        Allthreads.setThreads((prev) => {
+        value.setUserThreads((prev) => {
           const filtered = prev.filter((t) => t.threadId !== thread.threadId);
 
           return [...filtered];
@@ -74,7 +71,11 @@ const Sidebar = () => {
               >
                 <i className="fa-solid fa-bars"></i>
               </button>
-              <button className="search-btn" onClick={HandleSearch} aria-label="Search">
+              <button
+                className="search-btn"
+                onClick={HandleSearch}
+                aria-label="Search"
+              >
                 <i className="fa-solid fa-magnifying-glass"></i>
               </button>
             </div>
@@ -93,14 +94,14 @@ const Sidebar = () => {
 
           <div className="sidebar-footer">
             <div className="recents-section">
-              {Allthreads.threads.length === 0 && (
+              {value.userThreads.length === 0 && (
                 <h3 className="section-title">No Recents</h3>
               )}
-              {Allthreads.threads.length != 0 && (
+              {value.userThreads.length != 0 && (
                 <h3 className="section-title">Recents</h3>
               )}
               <div className="recents-list">
-                {Allthreads.threads.map((thread) => {
+                {value.userThreads.map((thread) => {
                   const isActive = ActiveThread.threadId === thread.threadId;
                   return (
                     <div

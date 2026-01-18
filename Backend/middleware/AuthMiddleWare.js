@@ -23,7 +23,7 @@ const userVerification = (req , res) => {
             const user = await User.findById(data.id);
             if(user) {
                 // console.log("User verified successfully:", user.username);
-                return res.json({message: "user verified successfully" , success: true , user: user.username});
+                return res.json({message: "user verified successfully" , success: true , user: {username: user.username , id: user.id}});
             } else {
                 console.log("User not found in database");
                 return res.json({message: "user not found during verification" , success: false});

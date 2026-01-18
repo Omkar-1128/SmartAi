@@ -3,17 +3,14 @@ import { useContext } from "react";
 import "./Search.css";
 import {
   CrossContext,
-  ThreadContext,
   ActiveMessages,
   ActiveThreadId,
 } from "../context";
 
 function Search() {
   const value = useContext(CrossContext);
-  const Allthreads = useContext(ThreadContext);
   const Active = useContext(ActiveMessages);
   const ActiveThread = useContext(ActiveThreadId);
-
   const [foundTitles, setFoundTitles] = useState([]);
   const [isSearched, setIsSearched] = useState(false);
   const SearchBoxRef = useRef(null);
@@ -42,7 +39,7 @@ function Search() {
       setIsSearched(false);
       return;
     }
-    const result = Allthreads.threads.filter((thread) =>
+    const result = value.userThreads.filter((thread) =>
       thread.title.toLowerCase().includes(value.searchTitle.toLowerCase())
     );
     setFoundTitles(result);
@@ -74,10 +71,10 @@ function Search() {
 
           <div className="recents-section">
             <div className="recents-list">
-              {Allthreads.threads.length === 0 && (
+              {value.userThreads.length === 0 && (
                 <h3 className="section-title">No Recents</h3>
               )}
-              {Allthreads.threads.length != 0 && (
+              {value.userThreads.length != 0 && (
                 <h3 className="section-title">Recents</h3>
               )}
               {isSearched
@@ -93,7 +90,7 @@ function Search() {
                       </div>
                     );
                   })
-                : Allthreads.threads.map((thread) => {
+                : value.userThreads.map((thread) => {
                     const isActive = ActiveThread.threadId === thread.threadId;
                     return (
                       <div

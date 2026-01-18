@@ -30,7 +30,7 @@
 
   --border-color: #e5e7eb;
   --border-light: #d1d5db;
-  --border-search: #d1d5db; /* default */
+  --border-search: #d1d5db;
   --border-search-hover: #9ca3af;
   --border-search-focus: #10a37f;
 
@@ -40,23 +40,60 @@
 
 .SearchBox {
   z-index: 9999;
-  height: 440px;
-  width: 668px;
   position: fixed;
   display: flex;
   align-items: center;
-  /* justify-content: center; */
   flex-direction: column;
-
-  left: 30%;
-  top: 18%;
-
   background-color: var(--bg-primary);
-
   border: 1px solid var(--border-search);
   border-radius: 1.5rem;
-
   padding: 20px;
+  
+  /* Desktop styles */
+  height: 440px;
+  width: 668px;
+  left: 30%;
+  top: 18%;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .SearchBox {
+    /* Full width on mobile with margins */
+    width: calc(100vw - 40px);
+    height: calc(100vh - 120px);
+    left: 20px;
+    top: 60px;
+    right: 20px;
+    
+    /* Adjust padding for mobile */
+    padding: 15px;
+    
+    /* Ensure it doesn't overflow */
+    max-width: none;
+    max-height: none;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .SearchBox {
+    width: calc(100vw - 20px);
+    left: 10px;
+    top: 50px;
+    padding: 12px;
+    border-radius: 1rem;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .SearchBox {
+    width: 80%;
+    left: 10%;
+    top: 15%;
+    height: 400px;
+  }
 }
 
 .SearchBox:hover {
@@ -69,26 +106,54 @@
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  margin-bottom: 15px;
 }
 
 .search-btn {
-    width: auto;
+  width: auto;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.search-btn:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 .search-input-inner {
-    height: 45px;
+  height: 45px;
   flex: 1;
   background: transparent;
   border: none;
   outline: none;
-
   border-bottom: 1px solid var(--border-search);
   color: var(--text-primary);
+  font-size: 16px;
+  padding: 0 12px;
+  transition: border-color 0.2s ease;
 }
 
 .search-input-inner:focus {
   outline: none;
   box-shadow: none;
+  border-bottom-color: var(--border-search-focus);
+}
+
+/* Mobile input adjustments */
+@media (max-width: 768px) {
+  .search-input-inner {
+    height: 40px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .search-btn {
+    padding: 6px 10px;
+  }
 }
 
 .recents-section {
@@ -96,6 +161,8 @@
   overflow: hidden;
   margin-bottom: 15px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .section-title {
@@ -104,9 +171,70 @@
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin: 10px 0 0 12px;
+  margin: 10px 0 8px 12px;
+  flex-shrink: 0;
+}
+
+/* Mobile section title */
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 12px;
+    margin: 8px 0 6px 8px;
+  }
 }
 
 .recents-list {
   overflow-y: auto;
+  flex: 1;
+  padding-right: 8px;
+}
+
+/* Custom scrollbar for webkit browsers */
+.recents-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.recents-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.recents-list::-webkit-scrollbar-thumb {
+  background: var(--border-search);
+  border-radius: 3px;
+}
+
+.recents-list::-webkit-scrollbar-thumb:hover {
+  background: var(--border-search-hover);
+}
+
+/* Thread items styling */
+.thread {
+  padding: 12px;
+  margin: 4px 0;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.4;
+  transition: all 0.2s ease;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.thread:hover {
+  background-color: var(--bg-hover);
+}
+
+.thread.clickedThread {
+  background-color: var(--accent);
+  color: white;
+}
+
+/* Mobile thread adjustments */
+@media (max-width: 768px) {
+  .thread {
+    padding: 10px 8px;
+    font-size: 13px;
+    margin: 2px 0;
+  }
 }

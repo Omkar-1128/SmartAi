@@ -12,7 +12,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],   // <-- Frontend URL here
+    origin: ["http://localhost:5173" , "https://superb-pastelito-2a1e81.netlify.app"],   // <-- Frontend URL here
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

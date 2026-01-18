@@ -2,6 +2,10 @@
 
 **SmartAI** is a modern, full-stack conversational AI application that brings the power of Google's Gemini AI directly to your browser. Built with the MERN stack, it offers a seamless chat experience with intelligent responses, voice recognition, and persistent conversation management.
 
+## 🌐 Live Demo
+
+**🚀 [Try SmartAI Live](https://superb-pastelito-2a1e81.netlify.app)**
+
 ## ✨ What Makes SmartAI Special
 
 🤖 **Powered by Google Gemini 2.5 Flash** - Experience cutting-edge AI conversations with one of the most advanced language models available

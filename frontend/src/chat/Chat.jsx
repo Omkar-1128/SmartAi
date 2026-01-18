@@ -155,7 +155,7 @@ const Chat = () => {
       idx++;
 
       if (idx >= content.length) clearInterval(interval);
-    }, 10);
+    }, 2);
 
     return () => clearInterval(interval);
   }, [fullReply, isUserAtBottom]);

@@ -41,7 +41,7 @@ function App() {
 
         if (data.success) {
           setUser(data.user);
-          toast(`Hello ${data.user.username}`, { position: "top-right" });
+          toast(`Hello ${data.user.username}`, { position: "bottom-left" });
         } else {
           removeCookie("token");
           navigate("/");

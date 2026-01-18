@@ -15,14 +15,14 @@ const SignUp = async (req, res, next) => {
     const token = createSecretToken(user._id);
 
     res.cookie("token", token, {
-      httpOnly: false,
+      httpOnly: true,
       secure: false,
       sameSite: "lax",
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({message: "User signed in successfully" , success: true,  user});
-    next();
+    res.status(201).json({message: "User signed in successfully" , success: true});
+    return;
   } catch (e) {
     console.log("Error occur during SignUp" + e);
   }
@@ -46,17 +46,28 @@ const LogIn = async (req, res, next) => {
     const token = createSecretToken(user._id);
 
     res.cookie("token", token, {
-      httpOnly: false,
+      httpOnly: true,
       secure: false,
       sameSite: "lax",
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({message: "User logged in successfully" , success: true,  user});
-    next();
+    res.status(201).json({message: "User logged in successfully" , success: true});
+    return;
   } catch (e) {
     console.log("Error occur during Login" + e);
   }
 };
 
-export {SignUp , LogIn};
+
+const LogOut = (req , res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false, // true in production
+  });
+
+  return res.json({ success: true });
+};
+
+export {SignUp , LogIn , LogOut};

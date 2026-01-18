@@ -218,7 +218,7 @@ const Chat = () => {
     <>
       {crossValues.profileDropDown && (
         <div className="ProfileDropDown" ref={profileRef}>
-          <div className="ProfileUserName">Hello, LightningAce</div>
+          <div className="ProfileUserName">Hello, {crossValues.username}</div>
           <div className="ProfileItems">
             <div>
               <i className="fa-solid fa-crown"></i>Upgrade plan
@@ -234,7 +234,7 @@ const Chat = () => {
             <div>
               <i className="fa-regular fa-circle-question"></i>Help
             </div>
-            <div>
+            <div onClick={crossValues.Logout}>
               <i className="fa-solid fa-arrow-right-from-bracket"></i>Log out
             </div>
           </div>

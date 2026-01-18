@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 import axios from "axios";
-import "./style.css"
+import "./style.css";
 
 const Login = () => {
   const API_URL = import.meta.env.VITE_THREAD_API_URL;
@@ -19,7 +19,11 @@ const Login = () => {
     const checkAuth = async () => {
       if (cookies.token) {
         try {
-          const { data } = await axios.post(`${API_URL}/`);
+          const { data } = await axios.post(
+            `${API_URL}/`,
+            {},
+            { withCredentials: true },
+          );
           if (data.status) {
             navigate("/Home");
           }
@@ -50,7 +54,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(`${API_URL}/login`, inputValue);
+      const { data } = await axios.post(
+        `${API_URL}/login`,
+        { ...inputValue },
+        {
+          withCredentials: true,
+        },
+      );
       console.log(data);
       const { success, message } = data;
       if (success) {
@@ -73,35 +83,37 @@ const Login = () => {
   };
 
   return (
-    <div className="form_container">
-      <h2>Login Account</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={email}
-            placeholder="Enter your email"
-            onChange={handleOnChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            placeholder="Enter your password"
-            onChange={handleOnChange}
-          />
-        </div>
-        <button type="submit">Submit</button>
-        <span>
-          Already have an account? <Link to={"/signup"}>Signup</Link>
-        </span>
-      </form>
-      <ToastContainer />
+    <div className="auth-container">
+      <div className="form_container">
+        <h2>Login Account</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={email}
+              placeholder="Enter your email"
+              onChange={handleOnChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              value={password}
+              placeholder="Enter your password"
+              onChange={handleOnChange}
+            />
+          </div>
+          <button type="submit">Submit</button>
+          <span>
+            Already have an account? <Link to={"/signup"}>Signup</Link>
+          </span>
+        </form>
+        <ToastContainer />
+      </div>
     </div>
   );
 };

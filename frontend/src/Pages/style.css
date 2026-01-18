@@ -100,6 +100,13 @@ body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.auth-container {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
 .form_container {
   background-color: #fff;
   padding: 2rem 3rem;
@@ -148,6 +155,10 @@ body {
   font-size: 1rem;
   cursor: pointer;
   border-radius: 0.3rem;
+}
+
+span {
+  color: #000;
 }
 
 span a {

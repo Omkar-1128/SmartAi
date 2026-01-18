@@ -17,5 +17,5 @@ createRoot(document.getElementById("root")).render(
         </Routes>
       </BrowserRouter>
     </CookiesProvider>
-  </StrictMode>,
+   </StrictMode>,
 );

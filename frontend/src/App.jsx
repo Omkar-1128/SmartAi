@@ -1,22 +1,74 @@
 import Sidebar from "./sidebar/Sidebar";
 import Navbar from "./navbar/Navbar";
 import Chat from "./chat/Chat";
-import { CrossContext, ThreadContext, ActiveMessages , ActiveThreadId , UserMessageContext} from "./context";
+import {
+  CrossContext,
+  ThreadContext,
+  ActiveMessages,
+  ActiveThreadId,
+  UserMessageContext,
+} from "./context";
 import "./App.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 function App() {
   const [cross, setCross] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [threads, setThreads] = useState([]);
   const [activeMessages, setActiveMessages] = useState([]);
-  const [threadId , setThreadId] = useState("null");
+  const [threadId, setThreadId] = useState("null");
   const [message, setMessage] = useState("");
-  const [profileDropDown , setProfileDropDown] = useState(false);
-  const [theme , setTheme] = useState(true);   // false for dark theme and true for light theme
-  const [search , setSearch] = useState(false);
-  const [searchTitle , setSearchTitle] = useState("");
+  const [profileDropDown, setProfileDropDown] = useState(false);
+  const [theme, setTheme] = useState(true); // false for dark theme and true for light theme
+  const [search, setSearch] = useState(false);
+  const [searchTitle, setSearchTitle] = useState("");
+  const API_URL = import.meta.env.VITE_THREAD_API_URL;
+
+  const navigate = useNavigate();
+  const [cookies, removeCookie] = useCookies(["token"]);
+  const [username, setUsername] = useState("");
+  useEffect(() => {
+    const verifyCookie = async () => {
+      try {
+        const { data } = await axios.post(
+          API_URL,
+          {},
+          { withCredentials: true },
+        );
+
+        if (data.success) {
+          setUsername(data.user);
+          toast(`Hello ${data.user}`, { position: "top-right" });
+        } else {
+          removeCookie("token");
+          navigate("/");
+        }
+      } catch (err) {
+        console.log("Error occur to verify Cookie at frontend" + err);
+        removeCookie("token");
+        navigate("/");
+      }
+    };
+
+    verifyCookie();
+  }, [navigate, removeCookie]);
+  const Logout = async () => {
+    try {
+    await axios.post(
+      `${API_URL}/logout`,
+      {},
+      { withCredentials: true }
+    );
+  } catch (e) {
+    console.log("Logout error", e);
+  } finally {
+    navigate("/");
+  }
+  };
 
   const GetThreads = import.meta.env.VITE_THREAD_API_URL;
   useEffect(() => {
@@ -32,12 +84,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if(theme) {
+    if (theme) {
       document.body.classList.add("light-theme");
     } else {
       document.body.classList.remove("light-theme");
     }
-  }, [theme])
+  }, [theme]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -62,35 +114,59 @@ function App() {
   return (
     <div className="app-container">
       <UserMessageContext.Provider value={{ message, setMessage }}>
-      <ActiveMessages.Provider
-        value={{ activeMessages: activeMessages, setActiveMessages: setActiveMessages }}
-      >
-        <ThreadContext.Provider value={{threads , setThreads}}>
-          <ActiveThreadId.Provider value={{threadId: threadId , setThreadId: setThreadId}}>
-          <CrossContext.Provider value={{ cross, setCross , profileDropDown , setProfileDropDown , theme , setTheme , search , setSearch , searchTitle , setSearchTitle}}>
-            {/* Mobile overlay */}
-            {isMobile && cross && (
-              <div className="mobile-overlay" onClick={handleOverlayClick} />
-            )}
+        <ActiveMessages.Provider
+          value={{
+            activeMessages: activeMessages,
+            setActiveMessages: setActiveMessages,
+          }}
+        >
+          <ThreadContext.Provider value={{ threads, setThreads }}>
+            <ActiveThreadId.Provider
+              value={{ threadId: threadId, setThreadId: setThreadId }}
+            >
+              <CrossContext.Provider
+                value={{
+                  cross,
+                  setCross,
+                  profileDropDown,
+                  setProfileDropDown,
+                  theme,
+                  setTheme,
+                  search,
+                  setSearch,
+                  searchTitle,
+                  setSearchTitle,
+                  username,
+                  Logout,
+                }}
+              >
+                {/* Mobile overlay */}
+                {isMobile && cross && (
+                  <div
+                    className="mobile-overlay"
+                    onClick={handleOverlayClick}
+                  />
+                )}
 
-            <div className={`sidebar ${cross ? "open" : "closed"}`}>
-              <Sidebar />
-            </div>
+                <div className={`sidebar ${cross ? "open" : "closed"}`}>
+                  <Sidebar />
+                </div>
 
-            <div className="page">
-              <div className="navbar">
-                <Navbar />
-              </div>
+                <div className="page">
+                  <div className="navbar">
+                    <Navbar />
+                  </div>
 
-              <div className="chat">
-                <Chat />
-              </div>
-            </div>
-          </CrossContext.Provider>
-          </ActiveThreadId.Provider>
-        </ThreadContext.Provider>
-      </ActiveMessages.Provider>
+                  <div className="chat">
+                    <Chat />
+                  </div>
+                </div>
+              </CrossContext.Provider>
+            </ActiveThreadId.Provider>
+          </ThreadContext.Provider>
+        </ActiveMessages.Provider>
       </UserMessageContext.Provider>
+      <ToastContainer />
     </div>
   );
 }

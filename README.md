@@ -12,8 +12,6 @@
 
 🔐 **Secure & Private** - Enterprise-grade JWT authentication with HTTP-only cookies ensures your conversations remain private and secure
 
-📱 **Universal Access** - Responsive design that works flawlessly across desktop, tablet, and mobile devices with an elegant, modern interface
-
 ⚡ **Real-Time Experience** - Watch AI responses appear with realistic typing animations, creating an engaging conversational flow
 
 🎨 **Personalized Interface** - Switch between light and dark themes, with a clean, distraction-free design that focuses on what matters - your conversation
@@ -229,8 +227,3 @@ ISC License
 **Omkar Shelke**
 
 ---
-
-### 🚀 One-Line Setup
-```bash
-git clone <repo> && cd SmartAI && cd Backend && npm i && npm run dev & cd ../frontend && npm i && npm run dev
-```
